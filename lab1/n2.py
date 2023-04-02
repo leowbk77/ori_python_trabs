@@ -44,5 +44,5 @@ for termo in vocabulario:
 #escreve a saida
 outputFile = open('bagofwords.txt', 'x')
 for number in bagOfWords:
-    outputFile.write(number + ', ')
+    outputFile.write(str(number) + ', ')
 outputFile.close()
