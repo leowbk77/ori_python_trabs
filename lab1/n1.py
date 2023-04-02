@@ -1,9 +1,7 @@
 '''
-    N1 funcionando quase 100% (virgula saindo)
-    subir git
-    fazer N2
-    ------------------------------------------
-    funcionalizar
+    Leonardo Marques Ferreira - 11921BSI235
+    Script que cria o vocabulario (n1)
+    python3 n1.py arquivoinput.txt
 '''
 import sys
 from unidecode import unidecode
@@ -12,11 +10,6 @@ from unidecode import unidecode
 fileName = sys.argv[1]
 inputFile = open(fileName, "rt")
 vocabulario = []
-
-#teste
-print(fileName + '\n')
-#print(inputFile.read(5))
-#teste
 
 #le o arquivo e guarda as palavras em uma lista (vocabulario)
 for line in inputFile:
