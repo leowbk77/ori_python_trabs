@@ -26,7 +26,7 @@ while i < vocSize:
     vocabulario[i] = vocabulario[i].lower()
     i+=1
 
-#remove as duplicatas do vocabulario (transformar em funcao)
+#remove as duplicatas do vocabulario
 vocabulario = list(dict.fromkeys(vocabulario))
 
 #Ordem alfabetica
