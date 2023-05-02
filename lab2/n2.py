@@ -1,17 +1,18 @@
 '''
     Leonardo Marques Ferreira - 11921BSI235
     Script que encontra o TF-IDF de uma colecao de documentos (n2)
-    python3 n2.py
+    python3 n2.py ./vocabulario.txt ./diretorioDosTxts/
 '''
 from unidecode import unidecode
 from glob import glob
 import string
 import math
+import sys
 
 #caminho relativo dos arquivos .txt que serao lidos
-arquivos = "txtsala/*.txt"
+arquivos = sys.argv[2] + "*.txt"
 #caminho do vocabulario a ser lido
-voc = "./vocsala.txt"
+voc = sys.argv[1]
 
 #funcao que le o arquivo e cria uma lista com as palavras
 def read_file(file, wordList):

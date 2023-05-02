@@ -42,10 +42,10 @@ def create_vocabulario():
     for file in listaDeArquivos:
         arquivo = open(file, 'rt')
         read_file(arquivo, vocabulario)
-    #remove termos duplicados
-    vocabulario = list(dict.fromkeys(vocabulario))
     #unidecode no vocabulario
     unide(vocabulario)
+    #remove termos duplicados
+    vocabulario = list(dict.fromkeys(vocabulario))
     #coloca em ordem alfabetica
     vocabulario.sort()
     #escreve o arquivo do vocabulario
