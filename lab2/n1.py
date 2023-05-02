@@ -5,6 +5,7 @@
 '''
 from unidecode import unidecode
 from glob import glob
+import string
 
 #caminho relativo dos arquivos .txt que serao lidos
 arquivos = "txts/*.txt"
@@ -21,10 +22,10 @@ def unide(wordList):
     i = 0
     listSize = len(wordList)
     while i < listSize:
-        wordList[i] = unidecode(wordList[i])
-        wordList[i] = wordList[i].lower()
+        wordList[i] = unidecode(wordList[i]) #unide
+        wordList[i] = wordList[i].lower() #letras minusculas
+        wordList[i] = wordList[i].translate(str.maketrans('','', string.punctuation)) #remove a pontuacao
         i+=1
-#remover pontuacao aqui
 
 #funcao que escreve o arquivo do vocabulario
 def write_vocabulario(vocabulario):
@@ -75,17 +76,11 @@ def create_bow(vocabulario):
         print(file + ":")
         print(*bagOfWords, sep=',')
         
-for arquivo in glob("txts/*.txt"):
+'''
+for arquivo in glob(arquivos):
     print(arquivo)
-
-print("Criando vocabulario - done")
-#create_vocabulario()
-print("Arquivo criado - done\nLendo o vocabulario.txt")
+create_vocabulario()
 vocabulario = read_vocabulario("vocabulario.txt")
 print(vocabulario)
-print("lido. Printando bag of words")
 create_bow(vocabulario)
-
-
-
-
+'''
