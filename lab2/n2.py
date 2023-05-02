@@ -9,7 +9,9 @@ import string
 import math
 
 #caminho relativo dos arquivos .txt que serao lidos
-arquivos = "txts/*.txt"
+arquivos = "txtsala/*.txt"
+#caminho do vocabulario a ser lido
+voc = "./vocsala.txt"
 
 #funcao que le o arquivo e cria uma lista com as palavras
 def read_file(file, wordList):
@@ -84,9 +86,7 @@ def tfidf_table(vocabulario, dictTabelaTf, vetorIdf):
         dicionarioTfIdf[arquivo] = valoresTfIdf
     return dicionarioTfIdf
 
-for arquivo in glob(arquivos):
-    print(arquivo)
-vocabulario = read_vocabulario("vocabulario.txt")
+vocabulario = read_vocabulario(voc)
 print(vocabulario)
 print('\nCalculando TF-IDF')
 
@@ -95,4 +95,4 @@ vetorIdf = idf_table(vocabulario, dicionarioTf)
 dicionarioTfIdf = tfidf_table(vocabulario, dicionarioTf, vetorIdf)
 
 for arquivo in glob(arquivos):
-    print(dicionarioTfIdf[arquivo])
+    print(arquivo + ' : ' + str(dicionarioTfIdf[arquivo]))
