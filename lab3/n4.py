@@ -12,7 +12,6 @@ import math
 import sys
 
 import nltk
-import re
 
 #caminho relativo dos arquivos .txt que serao lidos
 arquivos = sys.argv[2] + "*.txt"
@@ -31,7 +30,7 @@ def read_file(file, wordList):
             wordList.append(word)
     file.close()
 
-#funcao que usa o unidecode na lista para facilitar o tratamento
+#funcao que usa o unidecode na lista para facilitar o tratamento (substituida)
 def unide(wordList):
     i = 0
     listSize = len(wordList)
@@ -41,13 +40,25 @@ def unide(wordList):
         wordList[i] = wordList[i].lower() #letras minusculas
         i+=1
 
-#funcao unide refeita usando o regex
-def unide_re(wordList):
-    unideList = []
+#funcao que faz o stemming usando o algoritmo de porter da NLTK
+def porter_stemming(wordList):
+    porter = nltk.PorterStemmer()
+    wordListStem = []
     for word in wordList:
-        unideList.append(unidecode(word))
-    unideList = unideList.re.findall(r'\b[A-zÀ-úü]+\b', unideList.lower())
-    return unideList
+        wordListStem.append(porter.stem(word))
+    return wordListStem
+
+#funcao de pre processamento - retorna o documento (wordlist) convertido e sem stopwords
+def pre_proc(wordList, stopwordsIdioma):
+    wordListMin = wordList
+    unide(wordListMin)
+    wordListProc = []
+    stopwords = set(nltk.corpus.stopwords.words(stopwordsIdioma))
+    for word in wordListMin:
+        for stopword in stopwords:
+            if word != stopword:
+                wordListProc.append(word)
+    wordList = wordListProc
 
 #funcao que le o txt do vocabulario e retorna a lista dos termos
 def read_vocabulario(path):
@@ -65,7 +76,9 @@ def tf_table(vocabulario):
         documento = []
         arquivoAtual = open(file, 'rt')
         read_file(arquivoAtual, documento)
-        unide(documento)
+        #unide(documento)
+        pre_proc(documento, 'english') # ...
+        # documento = porter_stemming(documento) <---- stemming
         for termo in vocabulario:
             numeroDeAparicoes = documento.count(termo)
             if numeroDeAparicoes > 0:
@@ -169,35 +182,32 @@ def vet_score(vocabulario, consulta):
     dictNormaDocumentos = normalize_table(dictTfIdfDocumentos)
 
     vetorTfIdfConsulta = tfidf_q(vocabulario, consulta, vetorIdfDocumentos) #encontra o TFIDF da consulta
-    normaConsulta = normalize_q(vetorTfIdfDaConsulta)
+    normaConsulta = normalize_q(vetorTfIdfConsulta)
 
     dictEscores = dict()
     for documento in dictTfIdfDocumentos:
         dictEscores[documento] = score_numerador(dictTfIdfDocumentos[documento], vetorTfIdfConsulta) / score_denominador(normaConsulta, dictNormaDocumentos[documento])
     return dictEscores
 
-#funcao de pre processamento - retorna o documento (wordlist) convertido e sem stopwords
-def pre_proc(wordList, stopwordsIdioma):
-    wordListMin = re.findall(r'\b[A-zÀ-úü]+\b', wordList.lower()) #regex
-    stopwords = set(nltk.corpus.stopwords.words(stopwordsIdioma))
-    wordListProc = [w for w in wordListMin if w not in stopwords]
-    return wordListProc
+#printa os scores em ordem decrescente
+def print_score_desc(dictEscores):
+    sortedEscores = dict(sorted(dictEscores.items(), key=lambda x:x[1], reverse=True))
+    print("Grau de similaridade (documento : valor):")
+    print(sortedEscores)
 
-#funcao que encontra o top 5 de documentos com maior grau de similaridade
-def find_top_five(dictEscores):
-    sortedEscores = dict(sorted(dictEscores.items(), key=lambda x:x[1]), reverse=True) #cria um dicionario com os valores arranjados em ordem decrescente
-    topFive = list(sortedEscores.items())[:5]
-    print(topFive)
 
-#funcao que faz o stemming usando o algoritmo de porter da NLTK
-def porter_stemming(wordList):
-    porter = nltk.PorterStemmer()
-    wordListStem = [porter.stem(t) for t in wordList]
-    return wordListStem
-
+''' CALCULO VETORIAL
+# print da consulta pra teste
 print(consulta)
-
+unide(consulta)
+print(consulta)
+#calculo vetorial
+documentoVocabulario = read_vocabulario(voc)
+dicionarioDeEscores = vet_score(documentoVocabulario, consulta)
+print_score_desc(dicionarioDeEscores)
 '''
+
+''' CALCULO TF-IDF
 vocabulario = read_vocabulario(voc)
 print(vocabulario)
 print('\nCalculando TF-IDF')

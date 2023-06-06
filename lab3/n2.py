@@ -153,16 +153,32 @@ def vet_score(vocabulario, consulta):
     dictNormaDocumentos = normalize_table(dictTfIdfDocumentos)
 
     vetorTfIdfConsulta = tfidf_q(vocabulario, consulta, vetorIdfDocumentos) #encontra o TFIDF da consulta
-    normaConsulta = normalize_q(vetorTfIdfDaConsulta)
+    normaConsulta = normalize_q(vetorTfIdfConsulta)
 
     dictEscores = dict()
     for documento in dictTfIdfDocumentos:
         dictEscores[documento] = score_numerador(dictTfIdfDocumentos[documento], vetorTfIdfConsulta) / score_denominador(normaConsulta, dictNormaDocumentos[documento])
     return dictEscores
 
-print(consulta)
+#printa os scores em ordem decrescente
+def print_score_desc(dictEscores):
+    sortedEscores = dict(sorted(dictEscores.items(), key=lambda x:x[1], reverse=True))
+    print("Grau de similaridade (documento : valor):")
+    print(sortedEscores)
 
+
+''' CALCULO VETORIAL
+# print da consulta pra teste
+print(consulta)
+unide(consulta)
+print(consulta)
+#calculo vetorial
+documentoVocabulario = read_vocabulario(voc)
+dicionarioDeEscores = vet_score(documentoVocabulario, consulta)
+print_score_desc(dicionarioDeEscores)
 '''
+
+''' CALCULO TF-IDF
 vocabulario = read_vocabulario(voc)
 print(vocabulario)
 print('\nCalculando TF-IDF')
